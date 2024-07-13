@@ -17,7 +17,7 @@ class UserSerializer(serializers.ModelSerializer):
       return super().create(validated_data)
     
   
-class CustomTokenSerializer(serializers.Serializer):
+class UserAuthSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True, style={'input_type': 'password'})
     
@@ -26,4 +26,29 @@ class CustomTokenSerializer(serializers.Serializer):
         raise serializers.ValidationError("Please provide an email and a password")
       return data
     
-    
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+  email = serializers.EmailField()
+  
+  def validate_email(self, value):
+    if not User.objects.filter(email=value).exists():
+      raise serializers.ValidationError("No user with that email exists")
+    return value
+  
+
+class PasswordResetSerializer(serializers.Serializer):
+  email = serializers.EmailField()
+  new_password = serializers.CharField(write_only=True, style={'input_type': 'password'})
+  
+  def validate_email(self, value):
+    if not User.objects.filter(email=value).exists():
+      raise serializers.ValidationError("No user with that email exists")
+    return value
+  
+  def save(self):
+    email = self.validated_data['email']
+    new_password = self.validated_data['new_password']
+    user = User.objects.get(email=email)
+    user.set_password(new_password)
+    user.save()
+    return user
