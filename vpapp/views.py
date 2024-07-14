@@ -5,8 +5,9 @@ from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from rest_framework import permissions
 from rest_framework.authtoken.models import Token
-from .serializers import UserAuthSerializer, PasswordResetRequestSerializer, PasswordResetSerializer, UserSerializer
+from .serializers import UserAuthSerializer, PasswordResetRequestSerializer, PasswordResetSerializer, UserSerializer, VideoSerializer
 from django.contrib.auth import get_user_model, authenticate, login
 
 class CreateUser(APIView):
@@ -78,3 +79,19 @@ class PasswordResetView(APIView):
       serializer.save()
       return Response({"message": "Password reset successful"}, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+  
+  
+
+class VideoUploadView(APIView):
+  permission_classes = [permissions.IsAdminUser]
+  
+  def post(self, request, format=None):
+    if not request.user.is_staff:
+      return Response({'detail': 'Only admins can upload videos'}, status=status.HTTP_403_FORBIDDEN)
+    
+    serializer = VideoSerializer(data=request.data)
+    if serializer.is_valid():
+      serializer.save(uploaded_by=request.user)
+      return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+  

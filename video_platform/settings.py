@@ -72,6 +72,9 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'noreply.vpapp@gmail.com'
 EMAIL_HOST_PASSWORD = 'nkicuoghxuajhyni'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 ROOT_URLCONF = 'video_platform.urls'
 

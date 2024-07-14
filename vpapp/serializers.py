@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from .models import Video
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
@@ -52,3 +53,12 @@ class PasswordResetSerializer(serializers.Serializer):
     user.set_password(new_password)
     user.save()
     return user
+  
+  
+
+class VideoSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Video
+    fields = ['id', 'title', 'description', 'video_file', 'upload_date', 'uploaded_by']
+    read_only_fields = ['id', 'upload_date', 'uploaded_by']
+    
