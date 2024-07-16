@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ video.title }}</title>
+    <style>
+        .video-container {
+            text-align: center;
+            margin: 20px;
+        }
+        .controls {
+            margin: 10px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .navigation {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <div class="logo">Business Logo</div>
+        <h1>{{ video.title }}</h1>
+        <video id="videoPlayer" controls>
+            <source src="{{ video.video_file.url }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <p>{{ video.description }}</p>
+        <div class="controls">
+            <button id="playButton">Play</button>
+            <button id="pauseButton">Pause</button>
+            <button id="shareButton">Share</button>
+        </div>
+        <div class="navigation">
+            {% if previous_video %}
+                <a href="{% url 'video-viewer' previous_video.pk %}"><button>Previous</button></a>
+            {% endif %}
+            {% if next_video %}
+                <a href="{% url 'video-viewer' next_video.pk %}"><button>Next</button></a>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('playButton').addEventListener('click', function() {
+            document.getElementById('videoPlayer').play();
+        });
+
+        document.getElementById('pauseButton').addEventListener('click', function() {
+            document.getElementById('videoPlayer').pause();
+        });
+
+        document.getElementById('shareButton').addEventListener('click', function() {
+            var videoUrl = window.location.href;
+            navigator.clipboard.writeText(videoUrl).then(function() {
+                alert('Video link copied to clipboard!');
+            }, function(err) {
+                console.error('Could not copy text: ', err);
+            });
+        });
+    </script>
+</body>
+</html>

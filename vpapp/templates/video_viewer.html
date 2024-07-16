@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ video.title }}</title>
+</head>
+<body>
+    <div class="logo">
+        <img src="{% static 'vpapp/static/download.png' %}" alt="Business Logo">
+    </div>
+
+    <h1>{{ video.title }}</h1>
+    <p>{{ video.description }}</p>
+    
+    <video controls>
+        <source src="{{ video.file.url }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="navigation">
+        {% if previous_video %}
+            <a href="{% url 'video-viewer' previous_video.pk %}">Previous</a>
+        {% endif %}
+        {% if next_video %}
+            <a href="{% url 'video-viewer' next_video.pk %}">Next</a>
+        {% endif %}
+    </div>
+
+    <button onclick="shareVideo()">Share</button>
+
+    <script>
+        function shareVideo() {
+            const videoUrl = window.location.href;
+            if (navigator.share) {
+                navigator.share({
+                    title: '{{ video.title }}',
+                    url: videoUrl
+                }).then(() => {
+                    console.log('Thanks for sharing!');
+                }).catch(console.error);
+            } else {
+                alert('Sharing is not supported on this browser.');
+            }
+        }
+    </script>
+</body>
+</html>
