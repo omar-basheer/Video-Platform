@@ -1,28 +1,23 @@
-from django.shortcuts import get_object_or_404, render
-from django.views import View
-from rest_framework import status
-from rest_framework.views import APIView
-from django.core.mail import send_mail
+from django.contrib.auth import get_user_model, authenticate, login
+from rest_framework.authtoken.models import Token
+from rest_framework.permissions import AllowAny
+from django.shortcuts import render, redirect, get_object_or_404
+from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.views import APIView
+from django.core.mail import send_mail
 from rest_framework import permissions
-from rest_framework.authtoken.models import Token
-from django.shortcuts import render, redirect
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.utils.decorators import method_decorator
-
+from rest_framework import status
 from vpapp.models import Video
+from django.views import View
 from .serializers import (
-    UserAuthSerializer,
     PasswordResetRequestSerializer,
     PasswordResetSerializer,
-    UserSerializer,
+    UserAuthSerializer,
     VideoSerializer,
+    UserSerializer,
 )
-from django.contrib.auth import get_user_model, authenticate, login
-
 
 class CreateUser(APIView):
     permission_classes = [AllowAny]
@@ -119,20 +114,24 @@ class VideoUploadView(APIView):
 
 
 class VideoViewer(View):
-  template_name = 'video_viewer2.html'
-  
-  def get(self, request, id):
-    video = get_object_or_404(Video, pk=id)
-    previous_video = Video.objects.filter(pk__lt=id).order_by('-pk').first()
-    next_video = Video.objects.filter(pk__gt=id).order_by('pk').first()
-    
-    context = {
-      'video': video,
-      'previous_video': previous_video,
-      'next_video': next_video,
-    }
-    
-    return render(request, self.template_name, context)
-  
+    template_name = "video_viewer.html"
 
+    def get(self, request, id=None):
+        if not id:
+            first_video = Video.objects.order_by("pk").first()
+            if first_video:
+                return redirect("video-viewer", id=first_video.pk)
+            else:
+                return render(request, "no_videos.html")
 
+        video = get_object_or_404(Video, pk=id)
+        previous_video = Video.objects.filter(pk__lt=id).order_by("-pk").first()
+        next_video = Video.objects.filter(pk__gt=id).order_by("pk").first()
+
+        context = {
+            "video": video,
+            "previous_video": previous_video,
+            "next_video": next_video,
+        }
+
+        return render(request, self.template_name, context)

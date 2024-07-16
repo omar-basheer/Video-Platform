@@ -1,49 +1,101 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ video.title }}</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+        }
+
+        .video-container {
+            text-align: center;
+            margin: 20px;
+        }
+
+        .controls {
+            margin: 10px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .navigation {
+            margin-top: 20px;
+        }
+
+        .video-player {
+            max-width: 90%;
+            max-height: 400px;
+            width: auto;
+            height: auto;
+        }
+
+        .logo img {
+            max-width: 100px;
+            height: auto;
+        }
+    </style>
 </head>
+
 <body>
-    <div class="logo">
-        <img src="{% static 'vpapp/static/download.png' %}" alt="Business Logo">
+    <div class="video-container">
+        <div class="logo">
+            <img src="{% static 'business_logo.png' %}" alt="Business Logo">
+        </div>
+        <h1>{{ video.title }}</h1>
+        <video class="video-player" id="videoPlayer" controls>
+            <source src="{{ video.video_file.url }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <p>{{ video.description }}</p>
+        <div class="controls">
+            <button id="playButton">Play</button>
+            <button id="pauseButton">Pause</button>
+            <button id="shareButton">Share</button>
+        </div>
+        <div class="navigation">
+            {% if previous_video %}
+            <a href="{% url 'video-viewer' previous_video.pk %}"><button>Previous</button></a>
+            {% endif %}
+            {% if next_video %}
+            <a href="{% url 'video-viewer' next_video.pk %}"><button>Next</button></a>
+            {% endif %}
+        </div>
     </div>
-
-    <h1>{{ video.title }}</h1>
-    <p>{{ video.description }}</p>
-    
-    <video controls>
-        <source src="{{ video.file.url }}" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-
-    <div class="navigation">
-        {% if previous_video %}
-            <a href="{% url 'video-viewer' previous_video.pk %}">Previous</a>
-        {% endif %}
-        {% if next_video %}
-            <a href="{% url 'video-viewer' next_video.pk %}">Next</a>
-        {% endif %}
-    </div>
-
-    <button onclick="shareVideo()">Share</button>
 
     <script>
-        function shareVideo() {
-            const videoUrl = window.location.href;
-            if (navigator.share) {
-                navigator.share({
-                    title: '{{ video.title }}',
-                    url: videoUrl
-                }).then(() => {
-                    console.log('Thanks for sharing!');
-                }).catch(console.error);
-            } else {
-                alert('Sharing is not supported on this browser.');
-            }
-        }
+        document.getElementById('playButton').addEventListener('click', function () {
+            document.getElementById('videoPlayer').play();
+        });
+
+        document.getElementById('pauseButton').addEventListener('click', function () {
+            document.getElementById('videoPlayer').pause();
+        });
+
+        document.getElementById('shareButton').addEventListener('click', function () {
+            var videoUrl = window.location.href;
+            navigator.clipboard.writeText(videoUrl).then(function () {
+                alert('Video link copied to clipboard!');
+            }, function (err) {
+                console.error('Could not copy text: ', err);
+            });
+        });
     </script>
 </body>
+
 </html>
