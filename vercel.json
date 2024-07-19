@@ -5,7 +5,14 @@
     { "src": "video_platform/wsgi.py", "use": "@vercel/python" }
   ],
   "routes": [
+    // { "src": "/static/(.*)", "dest": "/static/$1" },
     { "src": "/(.*)", "dest": "video_platform/wsgi.py" }
-  ]
+  ],
+  "env": {
+    "DJANGO_SETTINGS_MODULE": "video_platform.settings",
+    "GOOGLE_APPLICATION_CREDENTIALS": "vpapp-429901-56aa262f5327.json",
+    "STATIC_URL": "https://storage.googleapis.com/vpapp_videos/static/",
+    "MEDIA_URL": "https://storage.googleapis.com/vpapp_videos/media/"
+  }
 }
  

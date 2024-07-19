@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 from pathlib import Path
+from google.oauth2 import service_account
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,6 +43,7 @@ INSTALLED_APPS = [
     "vpapp",
     "rest_framework",
     "rest_framework.authtoken",
+    'storages',
 ]
 
 REST_FRAMEWORK = {
@@ -64,6 +67,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "video_platform.middleware.DisableCSRFMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -72,14 +76,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "noreply.vpapp@gmail.com"
 EMAIL_HOST_PASSWORD = "nkicuoghxuajhyni"
-
-MEDIA_URL = "/media/"
-# MEDIA_ROOT = BASE_DIR / "media"
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-
 
 ROOT_URLCONF = "video_platform.urls"
 
@@ -147,7 +143,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = 'https://storage.googleapis.com/vpapp_videos/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+MEDIA_URL = 'https://storage.googleapis.com/vpapp_videos/media/'
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_BUCKET_NAME = 'vpapp_videos'
+GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+    'vpapp-429901-56aa262f5327.json'
+)
+
+# MEDIA_URL = "/media/"
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# STATIC_URL = '/static/'
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'vpapp/static')]
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
