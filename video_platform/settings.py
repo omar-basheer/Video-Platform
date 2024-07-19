@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import json
 import os
 from pathlib import Path
 from google.oauth2 import service_account
@@ -143,15 +144,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
+google_credentials_json = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+credentials_dict = json.loads(google_credentials_json)
+
 STATIC_URL = 'https://storage.googleapis.com/vpapp_videos/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+
 MEDIA_URL = 'https://storage.googleapis.com/vpapp_videos/media/'
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 GS_BUCKET_NAME = 'vpapp_videos'
-GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    'vpapp-429901-56aa262f5327.json'
-)
+GS_CREDENTIALS = service_account.Credentials.from_service_account_info(credentials_dict)
+# GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+#     'vpapp-429901-56aa262f5327.json'
+# )
 
 # MEDIA_URL = "/media/"
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
