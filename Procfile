@@ -1,1 +1,1 @@
-web:gunicorn video_platform.wsgi
+web: python manage.py migrate && gunicorn video_platform.wsgi
