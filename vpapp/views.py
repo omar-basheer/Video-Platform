@@ -73,7 +73,7 @@ class PasswordResetRequestView(APIView):
 
             send_mail(
                 "Password Reset Request",
-                "Click the link below to reset your password \n\n http://localhost:8000/api/reset-password",
+                "Click the link below to reset your password \n\n https://web-production-78d12.up.railway.app/api/reset-password/",
                 "noreply.vpapp@gmail.com",
                 [email],
                 fail_silently=False,
