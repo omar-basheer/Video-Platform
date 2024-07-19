@@ -1,1 +1,1 @@
-web: gunicorn video_platform.wsgi
+web:gunicorn video_platform.wsgi
