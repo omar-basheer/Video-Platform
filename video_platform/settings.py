@@ -104,23 +104,23 @@ WSGI_APPLICATION = "video_platform.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
-}
 # DATABASES = {
-#     # "default": {
-#     #     "ENGINE": "django.db.backends.sqlite3",
-#     #     "NAME": BASE_DIR / "db.sqlite3",
-#     # }
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "vpapp",
-#         "USER": "oydaadmin",
-#         "PASSWORD": "OhenebaOmar123",
-#         "HOST": "oydaserver.postgres.database.azure.com",
-#         "PORT": "5432",
-#     }
+#     'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 # }
+DATABASES = {
+    # "default": {
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     "NAME": BASE_DIR / "db.sqlite3",
+    # }
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv('DATABASE_NAME'),
+        "USER": os.getenv('DATABASE_USER'),
+        "PASSWORD":os.getenv('DATABASE_PASS'),
+        "HOST": os.getenv('DATABASE_HOST'),
+        "PORT": os.getenv('DATABASE_PORT'),
+    }
+}
 
 
 # Password validation
