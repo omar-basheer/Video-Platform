@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import json
 import os
+import dj_database_url
 from pathlib import Path
 from google.oauth2 import service_account
 
@@ -29,7 +30,7 @@ SECRET_KEY = "django-insecure-e2ei)&uz_g6n=*cli@ysq3^i_cd2zk1u-%i22f+0-xza%&1mar
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["127.0.0.1", ".vercel.app"]
+ALLOWED_HOSTS = ["127.0.0.1", ".vercel.app", ".herokuapp.com"]
 
 
 # Application definition
@@ -103,19 +104,22 @@ WSGI_APPLICATION = "video_platform.wsgi.application"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    # "default": {
-    #     "ENGINE": "django.db.backends.sqlite3",
-    #     "NAME": BASE_DIR / "db.sqlite3",
-    # }
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "vpapp",
-        "USER": "oydaadmin",
-        "PASSWORD": "OhenebaOmar123",
-        "HOST": "oydaserver.postgres.database.azure.com",
-        "PORT": "5432",
-    }
+    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 }
+# DATABASES = {
+#     # "default": {
+#     #     "ENGINE": "django.db.backends.sqlite3",
+#     #     "NAME": BASE_DIR / "db.sqlite3",
+#     # }
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "vpapp",
+#         "USER": "oydaadmin",
+#         "PASSWORD": "OhenebaOmar123",
+#         "HOST": "oydaserver.postgres.database.azure.com",
+#         "PORT": "5432",
+#     }
+# }
 
 
 # Password validation
@@ -152,24 +156,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-google_credentials_json = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+GS_BUCKET_NAME = os.getenv('GS_BUCKET_NAME')
+
+google_credentials_json = os.getenv('GOOGLE_APPLICATION_CREDENTIALS_JSON')
 if google_credentials_json:
     google_credentials = json.loads(google_credentials_json)
 else:
-    raise ValueError("GOOGLE_APPLICATION_CREDENTIALS environment variable not set.")
-credentials_dict = json.loads(google_credentials_json)
+    raise ValueError("GOOGLE_APPLICATION_CREDENTIALS_JSON environment variable not set.")
+
+GS_CREDENTIALS = service_account.Credentials.from_service_account_info(google_credentials)
 
 STATIC_URL = "https://storage.googleapis.com/vpapp_videos/static/"
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
-
 MEDIA_URL = "https://storage.googleapis.com/vpapp_videos/media/"
 DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
-GS_BUCKET_NAME = "vpapp_videos"
-GS_CREDENTIALS = service_account.Credentials.from_service_account_info(credentials_dict)
-# GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-#     "vpapp-429901-56aa262f5327.json"
-# )
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
