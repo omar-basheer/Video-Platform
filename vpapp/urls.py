@@ -4,10 +4,12 @@ from .views import (
     LoginUser,
     PasswordResetRequestView,
     PasswordResetView,
-    # VideoUploadPageView,
     VideoUploadView,
     VideoViewer,
 )
+
+# from django.views.generic.base import RedirectView
+from django.shortcuts import redirect
 
 urlpatterns = [
     path("signup/", CreateUser.as_view(), name="signup"),
@@ -19,7 +21,6 @@ urlpatterns = [
     ),
     path("reset-password/", PasswordResetView.as_view(), name="reset-password"),
     path("upload-video/", VideoUploadView.as_view(), name="upload-video"),
-    # path("upload/", VideoUploadPageView.as_view(), name="upload"),
-    path('video/', VideoViewer.as_view(), name='video-viewer'),
-    path('video/<int:id>/', VideoViewer.as_view(), name='video-viewer'),
+    path("video/", VideoViewer.as_view(), name="video-viewer"),
+    path("video/<int:id>/", VideoViewer.as_view(), name="video-viewer"),
 ]

@@ -29,7 +29,7 @@ SECRET_KEY = "django-insecure-e2ei)&uz_g6n=*cli@ysq3^i_cd2zk1u-%i22f+0-xza%&1mar
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
+ALLOWED_HOSTS = ["127.0.0.1", ".vercel.app"]
 
 
 # Application definition
@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     "vpapp",
     "rest_framework",
     "rest_framework.authtoken",
-    'storages',
+    "storages",
 ]
 
 REST_FRAMEWORK = {
@@ -68,7 +68,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "video_platform.middleware.DisableCSRFMiddleware",
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -103,9 +103,17 @@ WSGI_APPLICATION = "video_platform.wsgi.application"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
+    # "default": {
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     "NAME": BASE_DIR / "db.sqlite3",
+    # }
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "vpapp",
+        "USER": "oydaadmin",
+        "PASSWORD": "OhenebaOmar123",
+        "HOST": "oydaserver.postgres.database.azure.com",
+        "PORT": "5432",
     }
 }
 
@@ -145,26 +153,23 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 google_credentials_json = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+if google_credentials_json:
+    google_credentials = json.loads(google_credentials_json)
+else:
+    raise ValueError("GOOGLE_APPLICATION_CREDENTIALS environment variable not set.")
 credentials_dict = json.loads(google_credentials_json)
 
-STATIC_URL = 'https://storage.googleapis.com/vpapp_videos/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+STATIC_URL = "https://storage.googleapis.com/vpapp_videos/static/"
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
 
-MEDIA_URL = 'https://storage.googleapis.com/vpapp_videos/media/'
-DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-GS_BUCKET_NAME = 'vpapp_videos'
+MEDIA_URL = "https://storage.googleapis.com/vpapp_videos/media/"
+DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+GS_BUCKET_NAME = "vpapp_videos"
 GS_CREDENTIALS = service_account.Credentials.from_service_account_info(credentials_dict)
 # GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-#     'vpapp-429901-56aa262f5327.json'
+#     "vpapp-429901-56aa262f5327.json"
 # )
-
-# MEDIA_URL = "/media/"
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-# STATIC_URL = '/static/'
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'vpapp/static')]
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

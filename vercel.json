@@ -2,12 +2,10 @@
   "version": 2,
   "builds": [
     {
-      "src": "manage.py",
+      "src": "video_platform/wsgi.py",
       "use": "@vercel/python",
       "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
-    },
-
-    { "src": "video_platform/wsgi.py", "use": "@vercel/python" }
+    }
   ],
   "routes": [
     { "src": "/static/(.*)", "dest": "/static/$1" },
