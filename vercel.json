@@ -1,7 +1,7 @@
 {
   "version": 2,
   "builds": [
-    { "src": "manage.py", "use": "@vercel/python" },
+    // { "src": "manage.py", "use": "@vercel/python" },
     { "src": "video_platform/wsgi.py", "use": "@vercel/python" }
   ],
   "routes": [
