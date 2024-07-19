@@ -157,7 +157,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-GS_BUCKET_NAME = os.getenv('GS_BUCKET_NAME')
+GS_BUCKET_NAME = 'vpapp_videos'
 
 google_credentials_json = os.getenv('GOOGLE_APPLICATION_CREDENTIALS_JSON')
 if google_credentials_json:
