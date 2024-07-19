@@ -162,14 +162,14 @@ USE_TZ = True
 
 GS_BUCKET_NAME = 'vpapp_videos'
 
-# google_credentials_json = os.getenv('GOOGLE_APPLICATION_CREDENTIALS_JSON')
+google_credentials_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS_JSON']
 # if google_credentials_json:
-#     google_credentials_json = base64.b64decode(google_credentials_json).decode('utf-8')
+#     # google_credentials_json = base64.b64decode(google_credentials_json).decode('utf-8')
 #     google_credentials = json.loads(google_credentials_json)
 # else:
 #     raise ValueError("GOOGLE_APPLICATION_CREDENTIALS_JSON environment variable not set.")
 
-# GS_CREDENTIALS = service_account.Credentials.from_service_account_info(google_credentials)
+# GS_CREDENTIALS = service_account.Credentials.from_service_account_info(google_credentials_json)
 GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
     'vpapp-429901-56aa262f5327.json'
 )
