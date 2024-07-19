@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-e2ei)&uz_g6n=*cli@ysq3^i_cd2zk1u-%i22f+0-xza%&1mar"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
 
 
 # Application definition
@@ -77,8 +77,8 @@ MEDIA_URL = "/media/"
 # MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# STATIC_URL = '/static/'
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 
 ROOT_URLCONF = "video_platform.urls"
